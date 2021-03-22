@@ -2,7 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\User;
+use App\Infrastructure\Eloquent\Users;
 use Faker\Generator as Faker;
 
 /*
@@ -16,9 +16,14 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(User::class, function (Faker $faker) {
+
+$factory->define(Users::class, function (Faker $faker) {
     return [
-        'name' => $faker->name,
+        'name' => $faker->sentence,
         'email' => $faker->email,
+        'telephone' => $faker->phoneNumber,
+        'cpf' => $faker->integer(11),
+        'obs' => $faker->paragraph,
+        'status' => $faker->randomElement([0, 1]),
     ];
 });
