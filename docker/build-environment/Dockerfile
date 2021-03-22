@@ -5,3 +5,4 @@ RUN apk update \
     && apk add sqlite \
     && apk add socat \
     && apk add php7-sqlite3
+    
