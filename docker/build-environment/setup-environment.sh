@@ -1,4 +1,4 @@
 #!/bin/bash
 
-echo "step 1 - Atualizando os pacotes"
+echo "step 1 - Instalando os pacotes"
 docker exec api-lumen composer install
