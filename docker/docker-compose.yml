@@ -1,0 +1,10 @@
+version: "3.4"
+services:
+  environment:
+    build: build-environment
+    container_name: api-lumen
+    volumes:
+      - ../:/var/www/html/
+    ports:
+      - "8000:8000"
+    command: php -S 0.0.0.0:8000 -t public/
