@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Domain\Repositories\UsersRepositoryInterface;
+use App\Domain\Services\UsersService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 
 class UsersController extends Controller
 {
-    private $usersRepository;
+    private $usersService;
 
-    public function __construct(UsersRepositoryInterface $usersRepository)
+    public function __construct(UsersService $usersService)
     {
-        $this->usersRepository = $usersRepository;
+        $this->usersService = $usersService;
     }
 
     public function create(Request $request): JsonResponse
@@ -27,30 +27,34 @@ class UsersController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return $this->errorResponse('Verifique os dados enviados.', $validator->errors());
+                throw new \DomainException ($validator->errors(), 422);
             }
 
-            $user = $this->usersRepository->create($request->all());
+            $user = $this->usersService->create($request->all());
 
             return $this->successResponse('Usuário cadastrado', $user);
 
+        } catch (\DomainException $exception) {
+            return $this->errorResponse($exception->getMessage());
         } catch (\Exception $exception) {
-            return $this->errorResponse("Erro ao cadastrar o usuário");
+            return $this->errorResponse('Erro ao cadastrar o usuário');
         }
     }
 
     public function find($user): JsonResponse
     {
         try {
-            $user = $this->usersRepository->find($user);
+            $user = $this->usersService->find($user);
 
             if (!$user) {
-                return $this->errorResponse('Usuário não encontrado');
+                throw new \DomainException ('Usuário não encontrado', 422);
             }
 
             return $this->successResponse('Usuário encontrado', $user);
+        } catch (\DomainException $exception) {
+            return $this->errorResponse($exception->getMessage());
         } catch (\Exception $exception) {
-            return $this->errorResponse("Erro ao buscar o usuário");
+            return $this->errorResponse("Erro ao buscar o usuário" . $exception->getMessage());
         }
     }
 
@@ -65,17 +69,19 @@ class UsersController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return $this->errorResponse('Verifique os dados enviados.', $validator->errors());
+                throw new \DomainException ($validator->errors(), 422);
             }
 
-            $user = $this->usersRepository->find($user);
+            $user = $this->usersService->find($user);
 
             if (!$user) {
                 return $this->errorResponse('Usuário não encontrado');
             }
 
-            $model = $this->usersRepository->update($user, $request->all());
+            $model = $this->usersService->update($user, $request->all());
             return $this->successResponse($model, 'Usuário atualizado');
+        } catch (\DomainException $exception) {
+            return $this->errorResponse($exception->getMessage());
         } catch (\Exception $exception) {
             return $this->errorResponse("Erro ao alterar o usuário");
         }
@@ -84,18 +90,17 @@ class UsersController extends Controller
     public function delete($user): JsonResponse
     {
         try {
-            $user = $this->usersRepository->find($user);
+            $user = $this->usersService->find($user);
 
             if (!$user) {
-                return $this->errorResponse('Usuário não encontrado');
+                throw new \DomainException ('Usuário não encontrado', 422);
             }
 
-            $user = $this->usersRepository->delete($user);
+            $user = $this->usersService->delete($user);
 
-            return response()->json([
-                'message' => ['message' => 'Usuário removido']
-            ]);
             return $this->successResponse('Usuário removido');
+        } catch (\DomainException $exception) {
+            return $this->errorResponse($exception->getMessage());
         } catch (\Exception $exception) {
             return $this->errorResponse("Erro ao remover o usuário");
         }
@@ -104,9 +109,11 @@ class UsersController extends Controller
     public function all(): JsonResponse
     {
         try {
-            $users =  $this->usersRepository->all()->toArray();
+            $users =  $this->usersService->all();
 
             return $this->successResponse('Listagem de usuários', $users);
+        } catch (\DomainException $exception) {
+            return $this->errorResponse($exception->getMessage());
         } catch (\Exception $exception) {
             return $this->errorResponse("Erro ao listar os usuário");
         }
