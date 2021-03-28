@@ -20,5 +20,5 @@ $router->group(['prefix' => 'users'], function () use ($router) {
     $router->put('/{user}', 'UsersController@update');
     $router->get('/{user}', 'UsersController@find');
     $router->get('/', 'UsersController@All');
-    $router->delete('/{user}', 'UsersController@detele');
+    $router->delete('/{user}', 'UsersController@delete');
 });
