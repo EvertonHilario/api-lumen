@@ -24,9 +24,9 @@ interface EloquentRepositoryInterface
 
     /**
      * @param $id
-     * @return Void
+     * @return Bool
      */
-    public function detete(int $id): Void;
+    public function delete(Model $model): Bool;
 
     /**
      * @param Model $model
