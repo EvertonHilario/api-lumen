@@ -43,11 +43,11 @@ class BaseRepository implements EloquentRepositoryInterface
 
     /**
      * @param int $id
-     * @return Void
+     * @return Bool
      */
-    public function detete(int $id): Void
+    public function delete(Model $model): Bool
     {
-        $this->model->destroy($id);
+        return $model->delete();
     }
 
     /**
