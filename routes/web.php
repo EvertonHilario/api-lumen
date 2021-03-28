@@ -14,6 +14,11 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
-$router->get('/teste', function () use ($router) {
-    return 'biruleibe';
+
+$router->group(['prefix' => 'users'], function () use ($router) {
+    $router->post('/', 'UsersController@create');
+    $router->put('/{user}', 'UsersController@update');
+    $router->get('/{user}', 'UsersController@find');
+    $router->get('/', 'UsersController@All');
+    $router->delete('/{user}', 'UsersController@detele');
 });
