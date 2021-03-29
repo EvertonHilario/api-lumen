@@ -1,6 +1,6 @@
 {
-    "name": "laravel/lumen",
-    "description": "The Laravel Lumen Framework.",
+    "name": "api/lumen",
+    "description": "Exemplo de API com o Lumen Framework",
     "keywords": ["framework", "laravel", "lumen"],
     "license": "MIT",
     "type": "project",
