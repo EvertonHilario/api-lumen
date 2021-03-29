@@ -27,7 +27,7 @@ class UsersController extends Controller
             ]);
 
             if ($validator->fails()) {
-                throw new \DomainException ($validator->errors(), 422);
+                return $this->errorResponse('Verifique os atributos', $validator->errors());
             }
 
             $user = $this->usersService->create($request->all());
@@ -37,7 +37,7 @@ class UsersController extends Controller
         } catch (\DomainException $exception) {
             return $this->errorResponse($exception->getMessage());
         } catch (\Exception $exception) {
-            return $this->errorResponse('Erro ao cadastrar o usuário');
+            return $this->errorResponse('Erro ao cadastrar o usuário' . $exception->getMessage());
         }
     }
 
@@ -69,7 +69,7 @@ class UsersController extends Controller
             ]);
 
             if ($validator->fails()) {
-                throw new \DomainException ($validator->errors(), 422);
+                return $this->errorResponse('Verifique os atributos', $validator->errors());
             }
 
             $user = $this->usersService->find($user);
@@ -78,8 +78,8 @@ class UsersController extends Controller
                 return $this->errorResponse('Usuário não encontrado');
             }
 
-            $model = $this->usersService->update($user, $request->all());
-            return $this->successResponse($model, 'Usuário atualizado');
+            $this->usersService->update($user, $request->all());
+            return $this->successResponse('Usuário atualizado', $user);
         } catch (\DomainException $exception) {
             return $this->errorResponse($exception->getMessage());
         } catch (\Exception $exception) {
